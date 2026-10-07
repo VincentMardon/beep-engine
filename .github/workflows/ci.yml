@@ -29,7 +29,7 @@ jobs:
         run: cargo +stable clippy --locked --all-targets -- -D warnings
 
       - name: Build
-        run: cargo +stable build --locked -- all-targets
+        run: cargo +stable build --locked --all-targets
 
       - name: Run tests
         run: cargo +stable test --locked --all-targets
