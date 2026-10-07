@@ -28,6 +28,9 @@ BeepEngine is an independent audio project written in Rust. Its development is a
 
 ## Teaching approach
 
+- Use `notes/roadmap.md` as the shared reference for project progress and the next learning steps. This personal learning note may remain in French at the user's request.
+- As the project grows, review `.gitignore` when new tools or generated files are introduced. Suggest any needed changes in the chat; the user applies them, following the non-Markdown editing restriction.
+
 - Explain why a Rust concept, dependency, or technical decision is needed before introducing it.
 - Prefer the simplest solution that helps the user understand the underlying concept.
 - Introduce complexity progressively and let the user write meaningful parts of the implementation.
