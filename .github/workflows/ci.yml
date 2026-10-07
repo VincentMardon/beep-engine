@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Rust quality checks
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install stable Rust
+        run: rustup toolchain install stable --profile minimal --component rustfmt --component --clippy
+
+      - name: Check formatting
+        run: cargo +stable fmt --all --check
+
+      - name: Run clippy
+        run: cargo +stable clippy --locked --all-targets -- -D warnings
+
+      - name: Build
+        run: cargo +stable build --locked -- all-targets
+
+      - name: Run tests
+        run: cargo +stable test --locked --all-targets
