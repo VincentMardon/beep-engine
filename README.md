@@ -21,6 +21,13 @@ The demo plays the startup beep, waits 500 ms, then plays the crash sound. A wor
 
 The listening sequence belongs to the demo. The sound generation functions are independent of Professional Hello World (PHW) and do not open an audio device.
 
+## Project structure
+
+- `src/lib.rs` contains the public `startup_beep(sample_rate)` and `crash_sound(sample_rate)` functions, along with their unit tests. Each function returns mono samples as a `Vec<f32>`.
+- `src/main.rs` uses the library and Rodio to play the two sounds in sequence.
+
+The current demo and tests use a sample rate of 48,000 Hz. Other rates and invalid inputs have not been validated yet. The library generates samples without opening an audio device.
+
 ## Quality checks
 
 ```sh
