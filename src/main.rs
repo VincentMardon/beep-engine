@@ -90,3 +90,37 @@ fn main() {
     ));
     player.sleep_until_end();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{crash_sound, startup_beep};
+
+    #[test]
+    fn sounds_have_the_expected_duration() {
+        assert_eq!(startup_beep(48_000).len(), 4_800);
+        assert_eq!(crash_sound(48_000).len(), 33_600);
+    }
+
+    #[test]
+    fn startup_beep_has_both_polarities_and_expected_amplitude() {
+        let samples = startup_beep(48_000);
+
+        assert!(samples.iter().any(|sample| *sample > 0.0));
+        assert!(samples.iter().any(|sample| *sample < 0.0));
+        assert!(
+            samples
+                .iter()
+                .all(|sample| (sample.abs() - 0.2).abs() < 0.000_001)
+        );
+    }
+
+    #[test]
+    fn crash_sound_starts_audibly_and_ends_in_silence() {
+        let samples = crash_sound(48_000);
+
+        assert!(!samples.is_empty());
+        assert!(samples.iter().all(|sample| sample.abs() <= 0.2));
+        assert!(samples[0].abs() > 0.1);
+        assert!(samples.last().unwrap().abs() < 0.000_001);
+    }
+}
