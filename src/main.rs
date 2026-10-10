@@ -1,4 +1,4 @@
-use beep_engine::{crash_sound, startup_beep};
+use beep_engine::{SampleRate, crash_sound, startup_beep};
 
 use rodio::{DeviceSinkBuilder, Player, buffer::SamplesBuffer};
 use std::{
@@ -8,7 +8,7 @@ use std::{
 };
 
 fn main() {
-    let sample_rate: u32 = 48_000;
+    let sample_rate = SampleRate::Hz48000;
 
     let output =
         DeviceSinkBuilder::open_default_sink().expect("Failed to open the default audio output");
@@ -16,7 +16,12 @@ fn main() {
     let player = Player::connect_new(output.mixer());
 
     let channels = NonZeroU16::new(1).expect("Channel count must be nonzero");
-    let playback_sample_rate = NonZeroU32::new(sample_rate).expect("Sample rate must be nonzero");
+    let playback_sample_rate =
+        NonZeroU32::new(sample_rate.hz()).expect("Sample rate must be nonzero");
+
+    let silence = vec![0.0_f32; (sample_rate.hz() / 5) as usize];
+
+    player.append(SamplesBuffer::new(channels, playback_sample_rate, silence));
 
     println!("Playing startup beep.");
     player.append(SamplesBuffer::new(
