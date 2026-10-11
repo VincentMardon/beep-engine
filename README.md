@@ -34,6 +34,49 @@ Both generation functions accept a `SampleRate` enum with two supported variants
 
 The crash noise updates 1,000 times per second at either rate to preserve its intended texture. The library generates samples without opening an audio device.
 
+## Browser demo and local npm package
+
+Install the WebAssembly target and the CLI version matching the pinned Rust dependency:
+
+```sh
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli --version 0.2.129 --locked
+```
+
+Build the browser bindings from the repository root:
+
+```sh
+cargo build --locked --lib --release --target wasm32-unknown-unknown
+wasm-bindgen --target web --out-dir web/wasm target/wasm32-unknown-unknown/release/beep_engine.wasm
+```
+
+Serve the repository locally and open `http://localhost:8000/web/`:
+
+```sh
+python -m http.server 8000 --bind 127.0.0.1
+```
+
+The demo has separate buttons for both sounds and a choice of sample rates. Browser audio is activated through user interaction.
+
+To inspect and create the local npm archive:
+
+```sh
+npm pack --dry-run
+npm pack --pack-destination target
+```
+
+The archive is `target/beep-engine-0.1.0.tgz`. It includes the JavaScript playback interface, TypeScript declarations, and generated WebAssembly files. Generated files remain ignored by Git. Rebuild and repack after changes to the distributed code or documentation. The package is marked private and is not published to the npm registry.
+
+Install the archive in a consuming project using its path:
+
+```sh
+npm install C:/dev/beep-engine/target/beep-engine-0.1.0.tgz
+```
+
+The package exports `createBeepEngine()`. After initialization, its returned object offers `startupBeep(sampleRate)` and `crashSound(sampleRate)`, with 48,000 Hz as the default. Both methods return promises that resolve after starting playback, not after the sound finishes.
+
+Playback requires a browser. Next.js integration and its handling of the Wasm asset still need to be verified in the consuming project.
+
 ## Quality checks
 
 ```sh

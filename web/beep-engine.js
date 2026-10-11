@@ -1,7 +1,7 @@
 import init, {
     startupBeep as generateStartupBeep,
     crashSound as generateCrashSound,
-} from "../target/web/beep_engine.js";
+} from "./wasm/beep_engine.js";
 
 export async function createBeepEngine() {
     await init();

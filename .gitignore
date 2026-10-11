@@ -3,3 +3,6 @@
 
 # Personal learning notes
 /notes/
+
+# Generated browser bindings and WebAssembly
+/web/wasm
