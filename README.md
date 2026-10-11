@@ -2,6 +2,14 @@
 
 A small independent audio engine written in Rust, developed progressively as a learning project.
 
+The first milestone is complete. Development is intentionally on hold until a concrete new need appears.
+
+## Documentation
+
+- [API guide](docs/api.md): Rust generation, browser playback, and initialization contracts.
+- [Architecture and decisions](docs/architecture.md): responsibilities, sound design, and known boundaries.
+- [Maintenance guide](docs/maintenance.md): setup, rebuilding, packaging, and resuming development.
+
 ## Current sounds
 
 - Startup beep: a square wave at approximately 880 Hz, lasting 100 ms.
@@ -75,7 +83,7 @@ npm install C:/dev/beep-engine/target/beep-engine-0.1.0.tgz
 
 The package exports `createBeepEngine()`. After initialization, its returned object offers `startupBeep(sampleRate)` and `crashSound(sampleRate)`, with 48,000 Hz as the default. Both methods return promises that resolve after starting playback, not after the sound finishes.
 
-Playback requires a browser. Next.js integration and its handling of the Wasm asset still need to be verified in the consuming project.
+Playback requires a browser. The user confirmed loading and playback in PHW's dedicated Next.js test page and locally served static export. PHW's main page remains unchanged; deployed GitHub Pages verification and main-page integration belong to PHW's separate workflow.
 
 ## Quality checks
 
@@ -90,4 +98,4 @@ GitHub Actions runs these checks on Windows for pushes and pull requests. Automa
 
 ## Scope
 
-The initial objective is to generate and play two sounds while understanding the Rust code behind them. PHW is an initial consumer; integration with PHW or a game engine is future work.
+The initial objective is to generate and play two sounds while understanding the Rust code behind them. PHW is an initial consumer, with browser consumption validated on a separate test page. Integration into its main sequence and into a game engine remains outside this milestone.

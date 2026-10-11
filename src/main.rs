@@ -19,6 +19,9 @@ fn main() {
     let playback_sample_rate =
         NonZeroU32::new(sample_rate.hz()).expect("Sample rate must be nonzero");
 
+    // Leading silence resolved a locally observed first-beep stutter.
+    // Keep this playback workaround out of the sound generators.
+    // The underlying cause has not been established.
     let silence = vec![0.0_f32; (sample_rate.hz() / 5) as usize];
 
     player.append(SamplesBuffer::new(channels, playback_sample_rate, silence));
