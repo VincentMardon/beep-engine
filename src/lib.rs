@@ -78,6 +78,36 @@ pub fn crash_sound(sample_rate: SampleRate) -> Vec<f32> {
     samples
 }
 
+#[cfg(target_arch = "wasm32")]
+mod web {
+    use super::{SampleRate, crash_sound, startup_beep};
+    use wasm_bindgen::prelude::*;
+
+    fn parse_sample_rate(value: f64) -> Result<SampleRate, JsError> {
+        if value == 44_100.0 {
+            Ok(SampleRate::Hz44100)
+        } else if value == 48_000.0 {
+            Ok(SampleRate::Hz48000)
+        } else {
+            Err(JsError::new(
+                "Unsupported sample rate: expected 44100 or 48000",
+            ))
+        }
+    }
+
+    #[wasm_bindgen(js_name = startupBeep)]
+    pub fn generate_startup_beep(sample_rate: f64) -> Result<Vec<f32>, JsError> {
+        let sample_rate = parse_sample_rate(sample_rate)?;
+        Ok(startup_beep(sample_rate))
+    }
+
+    #[wasm_bindgen(js_name = crashSound)]
+    pub fn generate_crash_sound(sample_rate: f64) -> Result<Vec<f32>, JsError> {
+        let sample_rate = parse_sample_rate(sample_rate)?;
+        Ok(crash_sound(sample_rate))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::{SampleRate, crash_sound, startup_beep};

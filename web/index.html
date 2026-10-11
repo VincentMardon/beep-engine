@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>BeepEngine — Browser demo</title>
+    </head>
+    <body>
+        <h1>BeepEngine</h1>
+
+        <label for="sample-rate">Sample rate</label>
+        <select id="sample-rate">
+            <option value="44100">44,100 Hz</option>
+            <option value="48000" selected>48,000 Hz</option>
+        </select>
+
+        <button id="beep" disabled>Play startup beep</button>
+        <button id="crash" disabled>Play crash sound</button>
+
+        <p id="status" role="status">Loading engine...</p>
+
+        <script type="module">
+            import { createBeepEngine } from "./beep-engine.js";
+
+            const beepButton = document.querySelector("#beep");
+            const crashButton = document.querySelector("#crash");
+            const sampleRateSelect = document.querySelector("#sample-rate");
+            const status = document.querySelector("#status");
+
+            try {
+                const beepEngine = await createBeepEngine();
+
+                async function play(sound) {
+                    try {
+                        const sampleRate = Number(sampleRateSelect.value);
+                        await beepEngine[sound](sampleRate);
+                        status.textContent = `Started ${sound} at ${sampleRate} Hz.`;
+                    } catch (error) {
+                        status.textContent = `Playback failed: ${error.message}`;
+                    }
+                }
+
+                beepButton.addEventListener("click", () => play("startupBeep"));
+                crashButton.addEventListener("click", () => play("crashSound"));
+
+                beepButton.disabled = false;
+                crashButton.disabled = false;
+                status.textContent = `Ready.`;
+            } catch (error) {
+                status.textContent = `Engine initialization failed: ${error.message}`;
+            }
+        </script>
+    </body>
+</html>
